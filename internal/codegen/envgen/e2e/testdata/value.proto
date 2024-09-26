@@ -1,0 +1,20 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Value {
+  google.protobuf.Value normal = 1 [(confpb.v1.env) = "VALUE"];
+  google.protobuf.Value with_presence = 2 [(confpb.v1.env) = "VALUE_WITH_PRESENCE", features.field_presence = EXPLICIT];
+  repeated google.protobuf.Value list = 3 [(confpb.v1.env) = "VALUE_LIST"];
+
+  oneof oneof_test {
+    google.protobuf.Value oneof_option_a = 4 [(confpb.v1.env) = "VALUE_ONEOF_A"];
+    google.protobuf.Value oneof_option_b = 5 [(confpb.v1.env) = "VALUE_ONEOF_B"];
+  }
+}

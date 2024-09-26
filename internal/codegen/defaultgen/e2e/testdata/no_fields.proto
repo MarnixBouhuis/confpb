@@ -1,0 +1,12 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message NoFieldsWithDefaultOption {
+  string foo = 1;
+}

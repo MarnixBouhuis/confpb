@@ -1,0 +1,33 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Timestamp {
+  google.protobuf.Timestamp normal = 1 [(confpb.v1.default).timestamp = "1985-04-12T23:20:50.52Z"];
+  google.protobuf.Timestamp with_presence = 2 [(confpb.v1.default).timestamp = "1985-04-12T23:20:50.52Z", features.field_presence = EXPLICIT];
+  repeated google.protobuf.Timestamp list = 3 [(confpb.v1.default).repeated_timestamp = {values: [
+    "1985-04-12T23:20:50.52Z",
+    "1937-01-01T12:00:27.87+00:20",
+    "1990-12-31T23:59:59Z"
+  ]}];
+
+  oneof oneof_test {
+    google.protobuf.Timestamp oneof_option = 4 [(confpb.v1.default).timestamp = "1985-04-12T23:20:50.52Z"];
+  }
+
+  map<string, google.protobuf.Timestamp> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      timestamp_value: "1985-04-12T23:20:50.52Z",
+    }, {
+      string_key: "key2",
+      timestamp_value: "1937-01-01T12:00:27.87+00:20",
+    }];
+  }];
+}

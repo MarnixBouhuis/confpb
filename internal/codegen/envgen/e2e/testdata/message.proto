@@ -1,0 +1,51 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Message {
+  string test = 1 [(confpb.v1.env) = "TEST"];
+}
+
+message Nested {
+  Message message = 1 [(confpb.v1.env) = "NESTED"];
+  Message with_presence = 2 [(confpb.v1.env) = "NESTED_PRESENCE", features.field_presence = EXPLICIT];
+  repeated Message list = 3 [(confpb.v1.env) = "NESTED_LIST"];
+
+  oneof oneof_test {
+    Message oneof_option_a = 4 [(confpb.v1.env) = "NESTED_ONEOF_A"];
+    Message oneof_option_b = 5 [(confpb.v1.env) = "NESTED_ONEOF_B"];
+  }
+}
+
+message NestedRecursive {
+  string test = 1 [(confpb.v1.env) = "TEST"];
+
+  NestedRecursive message = 2 [(confpb.v1.env) = "NESTED"];
+  NestedRecursive with_presence = 3 [(confpb.v1.env) = "NESTED_PRESENCE", features.field_presence = EXPLICIT];
+  repeated NestedRecursive list = 4 [(confpb.v1.env) = "NESTED_LIST"];
+
+  oneof oneof_test {
+    NestedRecursive oneof_option_a = 5 [(confpb.v1.env) = "NESTED_ONEOF_A"];
+    NestedRecursive oneof_option_b = 6 [(confpb.v1.env) = "NESTED_ONEOF_B"];
+  }
+}
+
+message WithEmbedded {
+  message EmbeddedMessage {
+    string test = 1 [(confpb.v1.env) = "TEST"];
+  }
+
+  EmbeddedMessage message = 1 [(confpb.v1.env) = "NESTED"];
+  EmbeddedMessage with_presence = 2 [(confpb.v1.env) = "NESTED_PRESENCE", features.field_presence = EXPLICIT];
+  repeated EmbeddedMessage list = 3 [(confpb.v1.env) = "NESTED_LIST"];
+
+  oneof oneof_test {
+    EmbeddedMessage oneof_option_a = 4 [(confpb.v1.env) = "NESTED_ONEOF_A"];
+    EmbeddedMessage oneof_option_b = 5 [(confpb.v1.env) = "NESTED_ONEOF_B"];
+  }
+}

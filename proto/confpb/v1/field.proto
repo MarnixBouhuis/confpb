@@ -1,0 +1,326 @@
+syntax = "proto3";
+package confpb.v1;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "github.com/marnixbouhuis/confpb/pkg/gen/confpb/v1;confpbv1";
+
+extend google.protobuf.FieldOptions {
+  // Specify environment variable mapping for a message field.
+  // Value should be the environment variable to bind the protobuf field to.
+  // This value might be prefixed if the field is part of a message that is embedded in another message.
+  optional string env = 1200;
+  // Specify default value for a message field
+  optional Default default = 1201;
+}
+
+// Specify defaults for a message field
+message Default {
+  // Defaults for field with the "message" type
+  message Message {
+    // Whether to populate the message with defaults or not
+    bool fill_defaults = 1;
+  }
+
+  // Defaults for repeated double fields
+  message RepeatedDouble {
+    // List of default values
+    repeated double values = 1;
+  }
+
+  // Defaults for repeated float fields
+  message RepeatedFloat {
+    // List of default values
+    repeated float values = 1;
+  }
+
+  // Defaults for repeated int32 fields
+  message RepeatedInt32 {
+    // List of default values
+    repeated int32 values = 1;
+  }
+
+  // Defaults for repeated int64 fields
+  message RepeatedInt64 {
+    // List of default values
+    repeated int64 values = 1;
+  }
+
+  // Defaults for repeated uint32 fields
+  message RepeatedUint32 {
+    // List of default values
+    repeated uint32 values = 1;
+  }
+
+  // Defaults for repeated uint64 fields
+  message RepeatedUint64 {
+    // List of default values
+    repeated uint64 values = 1;
+  }
+
+  // Defaults for repeated sint32 fields
+  message RepeatedSint32 {
+    // List of default values
+    repeated sint32 values = 1;
+  }
+
+  // Defaults for repeated sint64 fields
+  message RepeatedSint64 {
+    // List of default values
+    repeated sint64 values = 1;
+  }
+
+  // Defaults for repeated fixed32 fields
+  message RepeatedFixed32 {
+    // List of default values
+    repeated fixed32 values = 1;
+  }
+
+  // Defaults for repeated fixed64 fields
+  message RepeatedFixed64 {
+    // List of default values
+    repeated fixed64 values = 1;
+  }
+
+  // Defaults for repeated sfixed32 fields
+  message RepeatedSfixed32 {
+    // List of default values
+    repeated sfixed32 values = 1;
+  }
+
+  // Defaults for repeated sfixed64 fields
+  message RepeatedSfixed64 {
+    // List of default values
+    repeated sfixed64 values = 1;
+  }
+
+  // Defaults for repeated bool fields
+  message RepeatedBool {
+    // List of default values
+    repeated bool values = 1;
+  }
+
+  // Defaults for repeated string fields
+  message RepeatedString {
+    // List of default values
+    repeated string values = 1;
+  }
+
+  // Defaults for repeated bytes fields
+  message RepeatedBytes {
+    // List of default values. Each bytes value should be base64 encoded.
+    repeated string values = 1;
+  }
+
+  // Defaults for repeated enum fields
+  message RepeatedEnum {
+    // List of default values. Each value should be the string value of an enum option.
+    repeated string values = 1;
+  }
+
+  // Defaults for repeated google.protobuf.Timestamp fields
+  message RepeatedTimestamp {
+    // List of default values
+    repeated string values = 1;
+  }
+
+  // Defaults for repeated google.protobuf.Duration fields
+  message RepeatedDuration {
+    // List of default values
+    repeated string values = 1;
+  }
+
+  // Defaults for repeated google.protobuf.Struct fields
+  message RepeatedStruct {
+    // List of default values. Each value should be a valid JSON object.
+    repeated string values = 1;
+  }
+
+  // Defaults for repeated google.protobuf.Value fields
+  message RepeatedValue {
+    // List of default values. Each value should be a valid JSON value (e.g. "foo", or 123, or false, or null, etc...).
+    repeated string values = 1;
+  }
+
+  // Defaults for repeated message fields (excluding some well-known types like timestamp, duration, struct and value).
+  message RepeatedMessage {
+    // List of default values
+    repeated Message values = 1;
+  }
+
+  // Defaults for map fields
+  message Map {
+    // Default option for an entry in a map
+    message Value {
+      // Type of the key of the map
+      oneof key_type {
+        // Default key for maps with the key type "int32"
+        int32 int32_key = 1;
+        // Default key for maps with the key type "int64"
+        int64 int64_key = 2;
+        // Default key for maps with the key type "uint32"
+        uint32 uint32_key = 3;
+        // Default key for maps with the key type "uint64"
+        uint64 uint64_key = 4;
+        // Default key for maps with the key type "sint32"
+        sint32 sint32_key = 5;
+        // Default key for maps with the key type "sint64"
+        sint64 sint64_key = 6;
+        // Default key for maps with the key type "fixed32"
+        fixed32 fixed32_key = 7;
+        // Default key for maps with the key type "fixed64"
+        fixed64 fixed64_key = 8;
+        // Default key for maps with the key type "sfixed32"
+        sfixed32 sfixed32_key = 9;
+        // Default key for maps with the key type "sfixed64"
+        sfixed64 sfixed64_key = 10;
+        // Default key for maps with the key type "bool"
+        bool bool_key = 11;
+        // Default key for maps with the key type "string"
+        string string_key = 12;
+      }
+
+      // Type of the value of the map
+      oneof value_type {
+        // Default value for maps with the value type "double"
+        double double_value = 13;
+        // Default value for maps with the value type "float"
+        float float_value = 14;
+        // Default value for maps with the value type "int32"
+        int32 int32_value = 15;
+        // Default value for maps with the value type "int64"
+        int64 int64_value = 16;
+        // Default value for maps with the value type "uint32"
+        uint32 uint32_value = 17;
+        // Default value for maps with the value type "uint64"
+        uint64 uint64_value = 18;
+        // Default value for maps with the value type "sint32"
+        sint32 sint32_value = 19;
+        // Default value for maps with the value type "sint64"
+        sint64 sint64_value = 20;
+        // Default value for maps with the value type "fixed32"
+        fixed32 fixed32_value = 21;
+        // Default value for maps with the value type "fixed64"
+        fixed64 fixed64_value = 22;
+        // Default value for maps with the value type "sfixed32"
+        sfixed32 sfixed32_value = 23;
+        // Default value for maps with the value type "sfixed64"
+        sfixed64 sfixed64_value = 24;
+        // Default value for maps with the value type "bool"
+        bool bool_value = 25;
+        // Default value for maps with the value type "string"
+        string string_value = 26;
+        // Default value for maps with the value type "bytes". Default value should be base64 encoded.
+        string bytes_value = 27;
+        // Default value for maps with the value type "enum".
+        string enum_value = 28;
+        // Default value for maps with the value type "google.protobuf.Timestamp". Default value should be an RFC3339 string.
+        string timestamp_value = 29;
+        // Default value for maps with the value type "google.protobuf.Duration". Default value should be supplied as a duration string (e.g. 10s).
+        string duration_value = 30;
+        // Default value for maps with the value type "google.protobuf.Struct". Default value should be a JSON object.
+        string struct_value = 31;
+        // Default value for maps with the value type "google.protobuf.Value". Default value should be a JSON value.
+        string value_value = 32;
+        // Default value for maps with the value type "message".
+        Message message_value = 33;
+      }
+    }
+
+    // List of default entries of this map, each entry should have the same key / value type as the map field this
+    // option is set on.
+    repeated Value values = 1;
+  }
+
+  // Define a default for the field, the use the same field_type as the type of the field this option is set on.
+  oneof field_type {
+    // Specify a default for a double field
+    double double = 1;
+    // Specify a default for a float field
+    float float = 2;
+    // Specify a default for an int32 field
+    int32 int32 = 3;
+    // Specify a default for an int64 field
+    int64 int64 = 4;
+    // Specify a default for a uint32 field
+    uint32 uint32 = 5;
+    // Specify a default for a uint64 field
+    uint64 uint64 = 6;
+    // Specify a default for a sint32 field
+    sint32 sint32 = 7;
+    // Specify a default for a sint64 field
+    sint64 sint64 = 8;
+    // Specify a default for a fixed32 field
+    fixed32 fixed32 = 9;
+    // Specify a default for a fixed64 field
+    fixed64 fixed64 = 10;
+    // Specify a default for a sfixed32 field
+    sfixed32 sfixed32 = 11;
+    // Specify a default for a sfixed64 field
+    sfixed64 sfixed64 = 12;
+    // Specify a default for a bool field
+    bool bool = 13;
+    // Specify a default for a string field
+    string string = 14;
+    // Specify a default for a bytes field. Default value should be base64 encoded.
+    string bytes = 15;
+    // Specify a default for an enum field. Default value should be the string value of an enum option.
+    string enum = 16;
+    // Specify a default for a google.protobuf.Timestamp field. Default value should be an RFC3339 string.
+    string timestamp = 17;
+    // Specify a default for a google.protobuf.Duration field. Default value should be supplied as a duration string (e.g. 10s).
+    string duration = 18;
+    // Specify a default for a google.protobuf.Struct field. Default value should be a JSON object.
+    string struct = 19;
+    // Specify a default for a google.protobuf.Value field. Default value should be a JSON value.
+    string value = 20;
+    // Specify a default for a message field
+    Message message = 21;
+
+    // Specify a default for a repeated double field
+    RepeatedDouble repeated_double = 22;
+    // Specify a default for a repeated float field
+    RepeatedFloat repeated_float = 23;
+    // Specify a default for a repeated int32 field
+    RepeatedInt32 repeated_int32 = 24;
+    // Specify a default for a repeated int64 field
+    RepeatedInt64 repeated_int64 = 25;
+    // Specify a default for a repeated uint32 field
+    RepeatedUint32 repeated_uint32 = 26;
+    // Specify a default for a repeated uint64 field
+    RepeatedUint64 repeated_uint64 = 27;
+    // Specify a default for a repeated sint32 field
+    RepeatedSint32 repeated_sint32 = 28;
+    // Specify a default for a repeated sint64 field
+    RepeatedSint64 repeated_sint64 = 29;
+    // Specify a default for a repeated fixed32 field
+    RepeatedFixed32 repeated_fixed32 = 30;
+    // Specify a default for a repeated fixed64 field
+    RepeatedFixed64 repeated_fixed64 = 31;
+    // Specify a default for a repeated sfixed32 field
+    RepeatedSfixed32 repeated_sfixed32 = 32;
+    // Specify a default for a repeated sfixed64 field
+    RepeatedSfixed64 repeated_sfixed64 = 33;
+    // Specify a default for a repeated bool field
+    RepeatedBool repeated_bool = 34;
+    // Specify a default for a repeated string field
+    RepeatedString repeated_string = 35;
+    // Specify a default for a repeated bytes field
+    RepeatedBytes repeated_bytes = 36;
+    // Specify a default for a repeated enum field
+    RepeatedEnum repeated_enum = 37;
+    // Specify a default for a repeated google.protobuf.Timestamp field
+    RepeatedTimestamp repeated_timestamp = 38;
+    // Specify a default for a repeated google.protobuf.Duration field
+    RepeatedDuration repeated_duration = 39;
+    // Specify a default for a repeated google.protobuf.Struct field
+    RepeatedStruct repeated_struct = 40;
+    // Specify a default for a repeated google.protobuf.Value field
+    RepeatedValue repeated_value = 41;
+    // Specify a default for a repeated message field
+    RepeatedMessage repeated_message = 42;
+
+    // Specify a default for a map field
+    Map map = 43;
+  }
+}

@@ -1,0 +1,14 @@
+edition = "2023";
+package testdata;
+
+option go_package = ".;testdata";
+
+option features.field_presence = IMPLICIT;
+
+message TestMessage {
+  string scalar_field = 1;
+  repeated string repeated_field = 2;
+  map<string, string> map_field = 3;
+  TestMessage nested_field = 4;
+  bytes bytes_field = 5;
+}

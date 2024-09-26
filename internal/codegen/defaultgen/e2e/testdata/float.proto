@@ -1,0 +1,28 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Float {
+  float normal = 1 [(confpb.v1.default).float = 123];
+  float with_presence = 2 [(confpb.v1.default).float = 456, features.field_presence = EXPLICIT];
+  repeated float list = 3 [(confpb.v1.default).repeated_float = {values: [123, 456, 789]}];
+
+  oneof oneof_test {
+    float oneof_option = 4 [(confpb.v1.default).float = 100];
+  }
+
+  map<string, float> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      float_value: 34,
+    }, {
+      string_key: "key2",
+      float_value: 78,
+    }];
+  }];
+}

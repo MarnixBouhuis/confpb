@@ -1,0 +1,19 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message String {
+  string normal = 1 [(confpb.v1.env) = "STRING"];
+  string with_presence = 2 [(confpb.v1.env) = "STRING_WITH_PRESENCE", features.field_presence = EXPLICIT];
+  repeated string list = 3 [(confpb.v1.env) = "STRING_LIST"];
+
+  oneof oneof_test {
+    string oneof_option_a = 4 [(confpb.v1.env) = "STRING_ONEOF_A"];
+    string oneof_option_b = 5 [(confpb.v1.env) = "STRING_ONEOF_B"];
+  }
+}

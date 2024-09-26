@@ -1,0 +1,28 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message String {
+  string normal = 1 [(confpb.v1.default).string = "foo"];
+  string with_presence = 2 [(confpb.v1.default).string = "bar", features.field_presence = EXPLICIT];
+  repeated string list = 3 [(confpb.v1.default).repeated_string = {values: ["foo", "bar", "baz"]}];
+
+  oneof oneof_test {
+    string oneof_option = 4 [(confpb.v1.default).string = "qux"];
+  }
+
+  map<string, string> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      string_value: "value1",
+    }, {
+      string_key: "key2",
+      string_value: "value2",
+    }];
+  }];
+}

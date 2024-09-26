@@ -1,0 +1,28 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Uint64 {
+  uint64 normal = 1 [(confpb.v1.default).uint64 = 123];
+  uint64 with_presence = 2 [(confpb.v1.default).uint64 = 456, features.field_presence = EXPLICIT];
+  repeated uint64 list = 3 [(confpb.v1.default).repeated_uint64 = {values: [123, 456, 789]}];
+
+  oneof oneof_test {
+    uint64 oneof_option = 4 [(confpb.v1.default).uint64 = 100];
+  }
+
+  map<uint64, uint64> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      uint64_key: 12,
+      uint64_value: 34,
+    }, {
+      uint64_key: 56,
+      uint64_value: 78,
+    }];
+  }];
+}

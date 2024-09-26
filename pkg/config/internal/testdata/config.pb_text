@@ -1,0 +1,22 @@
+[type.googleapis.com/testdata.TestMessage]:  {
+	scalar_field:  "foobar"
+	repeated_field:  "item1"
+	repeated_field:  "item2"
+	repeated_field:  "item3"
+	map_field:  {
+		key:  "key1"
+		value:  "value1"
+	}
+	map_field:  {
+		key:  "key2"
+		value:  "value2"
+	}
+	map_field:  {
+		key:  "key3"
+		value:  "value3"
+	}
+	nested_field:  {
+		scalar_field:  "nested"
+	}
+	bytes_field:  "some-bytes"
+}

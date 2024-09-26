@@ -1,0 +1,29 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Struct {
+  google.protobuf.Struct normal = 1 [(confpb.v1.default).struct = "{\"some\": \"json\"}"];
+  google.protobuf.Struct with_presence = 2 [(confpb.v1.default).struct = "{\"some\": \"json\"}", features.field_presence = EXPLICIT];
+  repeated google.protobuf.Struct list = 3 [(confpb.v1.default).repeated_struct = {values: ["{\"item\": \"item1\"}", "{\"item\": \"item2\"}"]}];
+
+  oneof oneof_test {
+    google.protobuf.Struct oneof_option = 4 [(confpb.v1.default).struct = "{\"some\": \"json\"}"];
+  }
+
+  map<string, google.protobuf.Struct> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      struct_value: "{\"item\": \"item1\"}",
+    }, {
+      string_key: "key2",
+      struct_value: "{\"item\": \"item2\"}",
+    }];
+  }];
+}

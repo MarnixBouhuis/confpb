@@ -1,0 +1,19 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Sint64 {
+  sint64 normal = 1 [(confpb.v1.env) = "SINT64"];
+  sint64 with_presence = 2 [(confpb.v1.env) = "SINT64_WITH_PRESENCE", features.field_presence = EXPLICIT];
+  repeated sint64 list = 3 [(confpb.v1.env) = "SINT64_LIST"];
+
+  oneof oneof_test {
+    sint64 oneof_option_a = 4 [(confpb.v1.env) = "SINT64_ONEOF_A"];
+    sint64 oneof_option_b = 5 [(confpb.v1.env) = "SINT64_ONEOF_B"];
+  }
+}

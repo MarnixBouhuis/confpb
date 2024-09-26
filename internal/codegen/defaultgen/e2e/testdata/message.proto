@@ -1,0 +1,88 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Message {
+  string test = 1 [(confpb.v1.default).string = "foo"];
+}
+
+message Nested {
+  Message normal = 1 [(confpb.v1.default).message = { fill_defaults: true }];
+  Message dont_fill = 2 [(confpb.v1.default).message = { fill_defaults: false }];
+  Message with_presence = 3 [(confpb.v1.default).message = { fill_defaults: true }, features.field_presence = EXPLICIT];
+  repeated Message list = 4 [(confpb.v1.default).repeated_message = {
+    values: [
+      { fill_defaults: true },
+      { fill_defaults: false },
+      { fill_defaults: true }
+    ],
+  }];
+
+  oneof oneof_test {
+    Message oneof_option = 5 [(confpb.v1.default).message = { fill_defaults: true }];
+  }
+
+  map<string, Message> map = 6 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      message_value: {
+        fill_defaults: true,
+      },
+    }, {
+      string_key: "key2",
+      message_value: {
+        fill_defaults: false,
+      },
+    }, {
+      string_key: "key3",
+      message_value: {
+        fill_defaults: true,
+      },
+    }];
+  }];
+}
+
+message WithEmbedded {
+  message EmbeddedMessage {
+    string test = 1 [(confpb.v1.default).string = "foo"];
+  }
+
+  EmbeddedMessage normal = 1 [(confpb.v1.default).message = { fill_defaults: true }];
+  EmbeddedMessage dont_fill = 2 [(confpb.v1.default).message = { fill_defaults: false }];
+  EmbeddedMessage with_presence = 3 [(confpb.v1.default).message = { fill_defaults: true }, features.field_presence = EXPLICIT];
+  repeated EmbeddedMessage list = 4 [(confpb.v1.default).repeated_message = {
+    values: [
+      { fill_defaults: true },
+      { fill_defaults: false },
+      { fill_defaults: true }
+    ],
+  }];
+
+  oneof oneof_test {
+    EmbeddedMessage oneof_option = 5 [(confpb.v1.default).message = { fill_defaults: true }];
+  }
+
+  map<string, EmbeddedMessage> map = 6 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      message_value: {
+        fill_defaults: true,
+      },
+    }, {
+      string_key: "key2",
+      message_value: {
+        fill_defaults: false,
+      },
+    }, {
+      string_key: "key3",
+      message_value: {
+        fill_defaults: true,
+      },
+    }];
+  }];
+}

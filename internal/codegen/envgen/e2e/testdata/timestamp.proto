@@ -1,0 +1,20 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Timestamp {
+  google.protobuf.Timestamp normal = 1 [(confpb.v1.env) = "TIMESTAMP"];
+  google.protobuf.Timestamp with_presence = 2 [(confpb.v1.env) = "TIMESTAMP_WITH_PRESENCE", features.field_presence = EXPLICIT];
+  repeated google.protobuf.Timestamp list = 3 [(confpb.v1.env) = "TIMESTAMP_LIST"];
+
+  oneof oneof_test {
+    google.protobuf.Timestamp oneof_option_a = 4 [(confpb.v1.env) = "TIMESTAMP_ONEOF_A"];
+    google.protobuf.Timestamp oneof_option_b = 5 [(confpb.v1.env) = "TIMESTAMP_ONEOF_B"];
+  }
+}
