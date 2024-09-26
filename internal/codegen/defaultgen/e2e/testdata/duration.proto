@@ -1,0 +1,29 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Duration {
+  google.protobuf.Duration normal = 1 [(confpb.v1.default).duration = "10s"];
+  google.protobuf.Duration with_presence = 2 [(confpb.v1.default).duration = "10s", features.field_presence = EXPLICIT];
+  repeated google.protobuf.Duration list = 3 [(confpb.v1.default).repeated_duration = {values: ["10s", "1m", "1h"]}];
+
+  oneof oneof_test {
+    google.protobuf.Duration oneof_option = 4 [(confpb.v1.default).duration = "10s"];
+  }
+
+  map<string, google.protobuf.Duration> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      duration_value: "10s",
+    }, {
+      string_key: "key2",
+      duration_value: "1m",
+    }];
+  }];
+}

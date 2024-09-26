@@ -1,0 +1,28 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Bool {
+  bool normal = 1 [(confpb.v1.default).bool = true];
+  bool with_presence = 2 [(confpb.v1.default).bool = true, features.field_presence = EXPLICIT];
+  repeated bool list = 3 [(confpb.v1.default).repeated_bool = {values: [true, false, true]}];
+
+  oneof oneof_test {
+    bool oneof_option = 4 [(confpb.v1.default).bool = true];
+  }
+
+  map<bool, bool> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      bool_key: false,
+      bool_value: true,
+    }, {
+      bool_key: true,
+      bool_value: false,
+    }];
+  }];
+}

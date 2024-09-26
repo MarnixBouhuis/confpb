@@ -1,0 +1,28 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Bytes {
+  bytes normal = 1 [(confpb.v1.default).bytes = "c29tZS1ieXRlcw=="];
+  bytes with_presence = 2 [(confpb.v1.default).bytes = "c29tZS1ieXRlcw==", features.field_presence = EXPLICIT];
+  repeated bytes list = 3 [(confpb.v1.default).repeated_bytes = {values: ["c29tZS1ieXRlcw==", "b3RoZXItYnl0ZXM=", ""]}];
+
+  oneof oneof_test {
+    bytes oneof_option = 4 [(confpb.v1.default).bytes = "c29tZS1ieXRlcw=="];
+  }
+
+  map<string, bytes> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      bytes_value: "c29tZS1ieXRlcw==",
+    }, {
+      string_key: "key2",
+      bytes_value: "b3RoZXItYnl0ZXM=",
+    }];
+  }];
+}

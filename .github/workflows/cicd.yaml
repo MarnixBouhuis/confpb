@@ -1,0 +1,101 @@
+name: CI/CD Pipeline
+on:
+  push: {}
+jobs:
+  lint_go:
+    name: Lint go code
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 1
+      - name: Setup go and tooling
+        uses: ./.github/actions/setup-go-with-dependencies
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: none
+          install-mode: none # golangci-lint is installed using the setup tooling step above. This ensures we use the same binary version in the CI as locally.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  lint_proto:
+    name: Lint proto
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 0 # Fetch all history (used for breaking change detection)
+      - name: Setup go and tooling
+        uses: ./.github/actions/setup-go-with-dependencies
+      - name: Run buf
+        uses: bufbuild/buf-action@d4b43256b3a511e94e6c0d38d478e1bd39f8690e # v1.0.1
+        with:
+          lint: true
+          breaking: true
+          breaking_against: ${{ github.event.repository.clone_url }}#format=git,branch=main
+          format: true
+          push: false # Do not push to schema registry
+          archive: false # Do not archive releases since we do not use the BSR
+      - name: Make sure all proto files have been generated
+        run: |
+          buf generate
+          if [[ `git status --porcelain` ]]; then
+            git --no-pager diff
+            echo "Uncommitted changes in generated files. Please run \"make gen\" locally and commit the changes."
+            exit 1
+          else
+            echo "All proto files are correctly generated."
+          fi
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 1
+      - name: Setup go and tooling
+        uses: ./.github/actions/setup-go-with-dependencies
+      - name: Run tests
+        shell: bash
+        run: |
+          set -o pipefail
+          go test -json ./... | tee test-results.json
+      - name: Report test results
+        if: always()
+        uses: guyarb/golang-test-annotations@2941118d7ef622b1b3771d1ff6eae9e90659eb26 # v0.8.0
+        with:
+          test-results: test-results.json
+          package-name: github.com/marnixbouhuis/confpb
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 0
+      - name: Setup go and tooling
+        uses: ./.github/actions/setup-go-with-dependencies
+      - name: Build release
+        run: goreleaser release --clean --snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: build
+          path: dist/*

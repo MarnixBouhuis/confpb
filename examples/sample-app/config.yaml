@@ -1,0 +1,16 @@
+"@type": "type.googleapis.com/config.v1.ApplicationConfig"
+server:
+  host: 127.0.0.1
+  port: 8443
+server_list:
+  - host: s1.example.com
+    port: 443
+  - host: s2.example.com
+    port: 8080
+  - host: s3.example.com
+    port: 8443
+some_duration: 3s
+key_value:
+  key1: other-value1
+  key2: other-value2
+  key3: other-value3

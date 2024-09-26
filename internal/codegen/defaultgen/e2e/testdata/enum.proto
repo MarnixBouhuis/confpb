@@ -1,0 +1,60 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+enum Enum {
+  ENUM_UNSPECIFIED = 0;
+  ENUM_OPTION_A = 1;
+  ENUM_OPTION_B = 2;
+}
+
+message EnumMessage {
+  Enum normal = 1 [(confpb.v1.default).enum = "ENUM_OPTION_A"];
+  Enum with_presence = 2 [(confpb.v1.default).enum = "ENUM_OPTION_B", features.field_presence = EXPLICIT];
+  repeated Enum list = 3 [(confpb.v1.default).repeated_enum = {values: ["ENUM_OPTION_B", "ENUM_OPTION_A", "ENUM_UNSPECIFIED"]}];
+
+  oneof oneof_test {
+    Enum oneof_option = 4 [(confpb.v1.default).enum = "ENUM_OPTION_A"];
+  }
+
+  map<string, Enum> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      enum_value: "ENUM_OPTION_A",
+    }, {
+      string_key: "key2",
+      enum_value: "ENUM_OPTION_B",
+    }];
+  }];
+}
+
+message EmbeddedEnumMessage {
+  enum EmbeddedEnum {
+    ENUM_UNSPECIFIED = 0;
+    ENUM_OPTION_A = 1;
+    ENUM_OPTION_B = 2;
+  }
+
+  EmbeddedEnum normal = 1 [(confpb.v1.default).enum = "ENUM_OPTION_A"];
+  EmbeddedEnum with_presence = 2 [(confpb.v1.default).enum = "ENUM_OPTION_B", features.field_presence = EXPLICIT];
+  repeated EmbeddedEnum list = 3 [(confpb.v1.default).repeated_enum = {values: ["ENUM_OPTION_B", "ENUM_OPTION_A", "ENUM_UNSPECIFIED"]}];
+
+  oneof oneof_test {
+    EmbeddedEnum oneof_option = 4 [(confpb.v1.default).enum = "ENUM_OPTION_A"];
+  }
+
+  map<string, EmbeddedEnum> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      enum_value: "ENUM_OPTION_A",
+    }, {
+      string_key: "key2",
+      enum_value: "ENUM_OPTION_B",
+    }];
+  }];
+}

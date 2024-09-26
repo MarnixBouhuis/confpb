@@ -1,0 +1,24 @@
+name: Build release
+on:
+  push:
+    tags: [ v* ]
+permissions:
+  contents: write
+jobs:
+  build_release:
+    name: Build release
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 0
+      - name: Setup go and tooling
+        uses: ./.github/actions/setup-go-with-dependencies
+      - name: Run GoReleaser
+        run: goreleaser release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

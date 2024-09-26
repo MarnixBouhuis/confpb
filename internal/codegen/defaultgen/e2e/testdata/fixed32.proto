@@ -1,0 +1,28 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Fixed32 {
+  fixed32 normal = 1 [(confpb.v1.default).fixed32 = 123];
+  fixed32 with_presence = 2 [(confpb.v1.default).fixed32 = 456, features.field_presence = EXPLICIT];
+  repeated fixed32 list = 3 [(confpb.v1.default).repeated_fixed32 = {values: [123, 456, 789]}];
+
+  oneof oneof_test {
+    fixed32 oneof_option = 4 [(confpb.v1.default).fixed32 = 100];
+  }
+
+  map<fixed32, fixed32> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      fixed32_key: 12,
+      fixed32_value: 34,
+    }, {
+      fixed32_key: 56,
+      fixed32_value: 78,
+    }];
+  }];
+}

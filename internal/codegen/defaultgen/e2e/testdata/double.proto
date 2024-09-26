@@ -1,0 +1,28 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+message Double {
+  double normal = 1 [(confpb.v1.default).double = 123];
+  double with_presence = 2 [(confpb.v1.default).double = 456, features.field_presence = EXPLICIT];
+  repeated double list = 3 [(confpb.v1.default).repeated_double = {values: [123, 456, 789]}];
+
+  oneof oneof_test {
+    double oneof_option = 4 [(confpb.v1.default).double = 100];
+  }
+
+  map<string, double> map = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      double_value: 34,
+    }, {
+      string_key: "key2",
+      double_value: 78,
+    }];
+  }];
+}

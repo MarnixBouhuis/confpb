@@ -1,0 +1,61 @@
+edition = "2023";
+package config.v1;
+
+// Include field.proto file to access confpb field options.
+// Either copy this file to your own codebase or use an external tool to download it.
+import "confpb/v1/field.proto";
+
+import "google/protobuf/duration.proto";
+
+option go_package = "sample-app/gen/config/v1;configv1";
+
+option features.field_presence = EXPLICIT;
+
+message ApplicationConfig {
+  message ServerConfig {
+    string host = 1 [(confpb.v1.env) = "HOST"];
+    uint32 port = 2 [(confpb.v1.env) = "PORT"];
+  }
+  ServerConfig server = 1 [(confpb.v1.env) = "SERVER"];
+
+  // Multiple values can be set for a list using:
+  // - SOME_LIST_1 = "item1"
+  // - SOME_LIST_2 = "item2"
+  // - SOME_LIST_3 = "item3"
+  // - SOME_LIST_4 = "item4"
+  // ...
+  repeated string some_list = 2 [
+    (confpb.v1.env) = "SOME_LIST",
+    (confpb.v1.default).repeated_string = {
+      values: ["default1", "default2", "default3"]
+    }
+  ];
+
+  // Multiple values can also be set for nested messages, the env key specified for the list will be used as prefix.
+  // Values can be set using:
+  // - SERVER_LIST_1_HOST = "1.2.3.4"
+  // - SERVER_LIST_1_HOST = "8080"
+  // - SERVER_LIST_2_HOST = "127.0.0.1"
+  // - SERVER_LIST_2_HOST = "433"
+  // ...
+  repeated ServerConfig server_list = 3 [
+    (confpb.v1.env) = "SERVER_LIST"
+  ];
+
+  // Some types have a special mapping. For durations, strings are parsed to durations (e.g. 10s, 10m30s, 1h).
+  // Other types that use special parsing include: timestamps, structs, struct values, and fields with the "bytes" type.
+  google.protobuf.Duration some_duration = 4 [
+    (confpb.v1.env) = "SOME_DURATION",
+    (confpb.v1.default).duration = "2s"
+  ];
+
+  map<string, string> key_value = 5 [(confpb.v1.default).map = {
+    values: [{
+      string_key: "key1",
+      string_value: "value1",
+    }, {
+      string_key: "key2",
+      string_value: "value2",
+    }],
+  }];
+}

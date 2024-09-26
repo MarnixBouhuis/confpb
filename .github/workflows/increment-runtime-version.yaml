@@ -1,0 +1,29 @@
+name: Increment runtime version
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+jobs:
+  increment_version:
+    name: Increment runtime version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 1
+      - name: Increment version
+        run: |
+          old_version=$(grep "RuntimeVersion int" internal/version/runtime.go | grep -o "[0-9]*")
+          new_version=$((old_version + 1))
+          sed -i "s/RuntimeVersion int = $old_version/RuntimeVersion int = $new_version/" internal/version/runtime.go
+      - name: Push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add .
+          git commit -m "Increment runtime version number"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

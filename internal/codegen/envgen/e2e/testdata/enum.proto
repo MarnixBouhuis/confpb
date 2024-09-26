@@ -1,0 +1,42 @@
+edition = "2023";
+package testgen;
+
+import "confpb/v1/field.proto";
+
+option go_package = ".;main";
+
+option features.field_presence = IMPLICIT;
+
+enum Enum {
+  ENUM_UNSPECIFIED = 0;
+  ENUM_OPTION_A = 1;
+  ENUM_OPTION_B = 2;
+}
+
+message EnumMessage {
+  Enum normal = 1 [(confpb.v1.env) = "ENUM"];
+  Enum with_presence = 2 [(confpb.v1.env) = "ENUM_WITH_PRESENCE", features.field_presence = EXPLICIT];
+  repeated Enum list = 3 [(confpb.v1.env) = "ENUM_LIST"];
+
+  oneof oneof_test {
+    Enum oneof_option_a = 4 [(confpb.v1.env) = "ENUM_ONEOF_A"];
+    Enum oneof_option_b = 5 [(confpb.v1.env) = "ENUM_ONEOF_B"];
+  }
+}
+
+message EmbeddedEnumMessage {
+  enum EmbeddedEnum {
+    ENUM_UNSPECIFIED = 0;
+    ENUM_OPTION_A = 1;
+    ENUM_OPTION_B = 2;
+  }
+
+  EmbeddedEnum normal = 1 [(confpb.v1.env) = "ENUM"];
+  EmbeddedEnum with_presence = 2 [(confpb.v1.env) = "ENUM_WITH_PRESENCE", features.field_presence = EXPLICIT];
+  repeated EmbeddedEnum list = 3 [(confpb.v1.env) = "ENUM_LIST"];
+
+  oneof oneof_test {
+    EmbeddedEnum oneof_option_a = 4 [(confpb.v1.env) = "ENUM_ONEOF_A"];
+    EmbeddedEnum oneof_option_b = 5 [(confpb.v1.env) = "ENUM_ONEOF_B"];
+  }
+}
