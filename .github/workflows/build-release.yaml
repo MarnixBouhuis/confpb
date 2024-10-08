@@ -18,7 +18,13 @@ jobs:
           fetch-depth: 0
       - name: Setup go and tooling
         uses: ./.github/actions/setup-go-with-dependencies
+      - name: Authenticate with buf schema registry
+        env:
+          BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+        run: echo ${BUF_TOKEN} | buf registry login buf.build --token-stdin
       - name: Run GoReleaser
         run: goreleaser release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish proto schema to buf schema registry
+        run: buf push --git-metadata
