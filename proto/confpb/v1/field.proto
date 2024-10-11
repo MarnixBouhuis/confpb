@@ -9,9 +9,11 @@ extend google.protobuf.FieldOptions {
   // Specify environment variable mapping for a message field.
   // Value should be the environment variable to bind the protobuf field to.
   // This value might be prefixed if the field is part of a message that is embedded in another message.
-  optional string env = 1200;
+  // Reserved in: https://github.com/protocolbuffers/protobuf/pull/18717
+  optional string env = 1250;
   // Specify default value for a message field
-  optional Default default = 1201;
+  // Reserved in: https://github.com/protocolbuffers/protobuf/pull/18717
+  optional Default default = 1251;
 }
 
 // Specify defaults for a message field
